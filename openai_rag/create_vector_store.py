@@ -1,3 +1,13 @@
+import os
+import concurrent.futures
+from tqdm import tqdm
+import argparse
+from openai import OpenAI
+from tools.api_key_manager import get_api_key
+
+client = OpenAI(api_key=get_api_key('OPENAI_API_KEY'))
+dir_pdfs = 'data'  # have those PDFs stored locally here
+
 def upload_single_pdf(file_path: str, vector_store_id: str):
     file_name = os.path.basename(file_path)
     try:
@@ -43,8 +53,23 @@ def create_vector_store(store_name: str) -> dict:
     except Exception as e:
         print(f"Error creating vector store: {e}")
         return {}
-    
 
-store_name = "openai_blog_store"
-vector_store_details = create_vector_store(store_name)
-upload_pdf_files_to_vector_store(vector_store_details["id"])
+def main(store_name=None):
+    if not store_name:
+        store_name = input("Enter name for the vector store (default: pdf_document_store): ").strip()
+        if not store_name:
+            store_name = "pdf_document_store"
+    
+    print(f"Creating vector store with name: {store_name}")
+    vector_store_details = create_vector_store(store_name)
+    
+    if vector_store_details:
+        upload_pdf_files_to_vector_store(vector_store_details["id"])
+    return vector_store_details
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Create and populate a vector store with PDF files")
+    parser.add_argument("--store-name", type=str, help="Name for the vector store")
+    args = parser.parse_args()
+    
+    vector_store_details = main(args.store_name)
