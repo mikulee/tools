@@ -12,6 +12,79 @@ from tools.openai_rag.create_vector_store import main as create_vector_store_mai
 # Constants
 DIR_PDFS = 'data'  # Directory containing PDF files
 
+def print_help():
+    """Display detailed usage instructions and examples"""
+    help_text = """
+Document Analyzer - PDF Analysis and Vector DB Query Tool
+=========================================================
+
+DESCRIPTION
+-----------
+This tool helps you analyze PDF documents, create vector stores from them, 
+and perform semantic searches using natural language queries.
+
+INSTALLATION
+------------
+1. Clone the repository:
+   git clone https://github.com/yourusername/tools.git
+   
+2. Install required dependencies:
+   pip install -r requirements.txt
+   
+3. Configure API keys:
+   - Option A: Create a .env file in the root directory
+     Add your API keys in the format:
+     OPENAI_API_KEY=your_key_here
+     LMSTUDIO_API_KEY=your_key_here
+     
+   - Option B: 1Password integration
+     a. Install 1Password CLI: https://developer.1password.com/docs/cli/get-started/
+     b. Configure 1Password CLI with 'op signin'
+     c. Store your API keys in 1Password with the following item structure:
+        - Item Category: API Credential
+        - Add fields with exact names: OPENAI_API_KEY, LMSTUDIO_API_KEY
+     d. No .env file needed when using 1Password integration
+
+PREREQUISITES
+------------
+1. Place your PDF documents in the './data' folder
+2. Ensure you have configured your API keys (see tools/api_key_manager.py)
+
+BASIC USAGE
+-----------
+1. Create a vector store with your documents:
+   python document_analyzer.py --create-store --store-name "my_documents"
+
+2. Query the vector store with a question:
+   python document_analyzer.py --query "What information is in these documents?"
+
+3. Test vector DB search specifically:
+   python document_analyzer.py --test-vectordb --query "Find specific information about X"
+
+4. Specify which model provider to use:
+   python document_analyzer.py --model openai --query "My question"
+   python document_analyzer.py --model lmstudio --query "My question"
+
+EXAMPLES
+--------
+Example 1: Create a new vector store named "research_papers"
+   python document_analyzer.py --create-store --store-name "research_papers"
+
+Example 2: Query the vector store about a specific topic
+   python document_analyzer.py --query "What are the key findings about climate change?"
+
+Example 3: Test vector search with detailed results using OpenAI
+   python document_analyzer.py --test-vectordb --query "Explain the methodology" --model openai
+
+ADDITIONAL NOTES
+---------------
+- Vector store IDs are returned when creating a store and should be saved for future use
+- Default query if none provided: "What's Deep Research?"
+- When no store ID is provided, a placeholder ID is used (replace in production)
+- For 1Password integration issues, run 'op signin' and verify your session is active
+"""
+    print(help_text)
+
 def extract_text_from_pdf(pdf_path):
     """Extract text content from a PDF file"""
     text = ""
@@ -94,8 +167,14 @@ def main():
     parser.add_argument("--create-store", action="store_true", help="Create a new vector store")
     parser.add_argument("--store-name", type=str, help="Name for the vector store")
     parser.add_argument("--model", type=str, help="Model to use (openai or lmstudio)")
+    parser.add_argument("--help-extended", action="store_true", help="Show extended help with examples")
     
     args = parser.parse_args()
+    
+    # Show extended help if requested
+    if args.help_extended:
+        print_help()
+        return
     
     # Set model preference if specified
     if args.model:
