@@ -1,0 +1,21 @@
+# OpenAI and API interaction
+openai>=1.0.0
+requests>=2.28.0
+
+# PDF processing
+PyPDF2>=3.0.0
+
+# Progress indicators and parallel processing
+tqdm>=4.65.0
+concurrent-futures>=3.0.5
+
+# Vector database and embeddings
+langchain>=0.1.0
+langchain-openai>=0.0.5
+chromadb>=0.4.18
+
+# Environment variables and configuration
+python-dotenv>=1.0.0
+
+# 1Password CLI - requires separate installation
+# See https://developer.1password.com/docs/cli/get-started/
