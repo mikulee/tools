@@ -1,14 +1,11 @@
 # Tools Collection
 
-A comprehensive collection of productivity and development tools focusing on LLM integration, API management, and document analysis.
+A comprehensive collection of productivity and development tools.
 
 ## Table of Contents
 
 - [Installation](#installation)
-- [API Key Management](#api-key-management)
-- [Document Analysis](#document-analysis)
-- [Vector Store Creation](#vector-store-creation)
-- [LLM Client Factory](#llm-client-factory)
+- [YouTube Video Downloader](#youtube-video-downloader)
 
 ## Installation
 
@@ -22,179 +19,81 @@ A comprehensive collection of productivity and development tools focusing on LLM
    pip install -r requirements.txt
    ```
 
-3. Configure API keys (see [API Key Management](#api-key-management) for details)
+3. Install FFmpeg if not already installed:
+   - Windows: `choco install ffmpeg`
+   - Linux: `sudo apt install ffmpeg`
+   - macOS: `brew install ffmpeg`
 
-## API Key Management
+## YouTube Video Downloader
 
-The `api_key_manager.py` module provides secure access to API keys through environment variables or 1Password integration.
-
-### Usage
-
-```python
-from tools.api_key_manager import get_api_key
-
-# Get API key from environment variables or 1Password
-openai_key = get_api_key('OPENAI_API_KEY')
-```
-
-### Configuration Options
-
-#### Option A: Environment Variables (.env file)
-1. Create a `.env` file in the root directory
-2. Add your API keys:
-   ```
-   OPENAI_API_KEY=your_key_here
-   LMSTUDIO_API_KEY=your_key_here
-   ```
-
-#### Option B: 1Password Integration
-1. Install 1Password CLI from https://developer.1password.com/docs/cli/get-started/
-2. Configure 1Password CLI with `op signin`
-3. Store your API keys in 1Password with the following structure:
-   - Item Category: API Credential
-   - Fields: OPENAI_API_KEY, LMSTUDIO_API_KEY
-
-## Document Analysis
-
-The `openai_rag/document_analyzer.py` tool helps analyze PDF documents, create vector stores, and perform semantic searches using natural language queries.
+The `youtube_downloader` module provides a command-line utility for downloading YouTube videos with automatic audio/video stream handling.
 
 ### Features
 
-- Extract text from PDF documents
-- Create vector stores from document content
-- Perform semantic searches using advanced LLM models
-- Support for multiple LLM providers (OpenAI, LMStudio)
+- Download YouTube videos using URLs
+- Automatic merging of separate audio/video streams
+- Quality selection options
+- Progress tracking
+- FFmpeg integration for media processing
 
 ### Usage
 
 ```bash
-# Create a vector store
-python document_analyzer.py --create-store --store-name "my_documents"
+# Basic usage (recommended)
+python -m tools.youtube_downloader "https://youtube.com/watch?v=example"
 
-# Query the vector store
-python document_analyzer.py --query "What information is in these documents?"
+# Download with quality selection
+python -m tools.youtube_downloader "https://youtube.com/watch?v=example" --quality 1080p
 
-# Test vector DB search with specific model
-python document_analyzer.py --test-vectordb --query "Explain the methodology" --model openai
+# Download to specific directory
+python -m tools.youtube_downloader "https://youtube.com/watch?v=example" --output ./my_videos
+
+# Download audio only
+python -m tools.youtube_downloader "https://youtube.com/watch?v=example" --audio-only
 ```
 
-### Help Documentation
-
-```
-Document Analyzer - PDF Analysis and Vector DB Query Tool
-=========================================================
-
-DESCRIPTION
------------
-This tool helps you analyze PDF documents, create vector stores from them, 
-and perform semantic searches using natural language queries.
-
-INSTALLATION
-------------
-1. Clone the repository:
-   git clone https://github.com/yourusername/tools.git
-   
-2. Install required dependencies:
-   pip install -r requirements.txt
-   
-3. Configure API keys:
-   - Option A: Create a .env file in the root directory
-     Add your API keys in the format:
-     OPENAI_API_KEY=your_key_here
-     LMSTUDIO_API_KEY=your_key_here
-     
-   - Option B: 1Password integration
-     a. Install 1Password CLI: https://developer.1password.com/docs/cli/get-started/
-     b. Configure 1Password CLI with 'op signin'
-     c. Store your API keys in 1Password with the following item structure:
-        - Item Category: API Credential
-        - Add fields with exact names: OPENAI_API_KEY, LMSTUDIO_API_KEY
-     d. No .env file needed when using 1Password integration
-
-PREREQUISITES
-------------
-1. Place your PDF documents in the './data' folder
-2. Ensure you have configured your API keys (see tools/api_key_manager.py)
-
-BASIC USAGE
------------
-1. Create a vector store with your documents:
-   python document_analyzer.py --create-store --store-name "my_documents"
-
-2. Query the vector store with a question:
-   python document_analyzer.py --query "What information is in these documents?"
-
-3. Test vector DB search specifically:
-   python document_analyzer.py --test-vectordb --query "Find specific information about X"
-
-4. Specify which model provider to use:
-   python document_analyzer.py --model openai --query "My question"
-   python document_analyzer.py --model lmstudio --query "My question"
-
-EXAMPLES
---------
-Example 1: Create a new vector store named "research_papers"
-   python document_analyzer.py --create-store --store-name "research_papers"
-
-Example 2: Query the vector store about a specific topic
-   python document_analyzer.py --query "What are the key findings about climate change?"
-
-Example 3: Test vector search with detailed results using OpenAI
-   python document_analyzer.py --test-vectordb --query "Explain the methodology" --model openai
-
-ADDITIONAL NOTES
----------------
-- Vector store IDs are returned when creating a store and should be saved for future use
-- Default query if none provided: "What's Deep Research?"
-- When no store ID is provided, a placeholder ID is used (replace in production)
-- For 1Password integration issues, run 'op signin' and verify your session is active
-```
-
-## Vector Store Creation
-
-The `openai_rag/create_vector_store.py` module provides functionality for creating vector stores from PDF documents.
-
-### Features
-
-- Create named vector stores on OpenAI platform
-- Upload PDF files in parallel with progress tracking
-- Integrate with existing document analysis workflow
-
-### Usage
-
-```python
-from tools.openai_rag.create_vector_store import main as create_vector_store
-
-# Create a vector store with the name "research_papers"
-vector_store_details = create_vector_store("research_papers")
-```
-
-Or run directly:
+### Advanced Features
 
 ```bash
-python create_vector_store.py --store-name "research_papers"
+# List available formats
+python -m tools.youtube_downloader "https://youtube.com/watch?v=example" --list-formats
+
+# Clean partial downloads
+python -m tools.youtube_downloader --clean
+
+# Download with automatic best quality selection
+python -m tools.youtube_downloader "https://youtube.com/watch?v=example" --quality best
 ```
 
-## LLM Client Factory
+### Packaging
 
-The `llm_client_factory.py` module provides a factory pattern for abstracting LLM provider interactions.
+To create a distributable package:
 
-### Features
+```bash
+python package_yt_downloader.py
+```
 
-- Unified interface for multiple LLM providers (OpenAI, LMStudio)
-- Environment-based provider selection
-- Simplified client instantiation with proper API key management
+This will create `youtube_downloader.zip` containing all necessary files.
 
-### Usage
+To use the packaged version:
+1. Extract the zip file
+2. Install requirements: `pip install -r requirements.txt`
+3. Run the downloader: `python -m youtube_downloader <URL>`
 
-```python
-from tools.llm_client_factory import get_llm_client
+## Project Structure
 
-# Get the appropriate LLM client based on environment configuration
-client = get_llm_client()
-
-# Use the client with a unified API
-response = client.chat_completion("What is the capital of France?")
+```
+tools/
+├── youtube_downloader/
+│   ├── __init__.py      # Package initialization
+│   ├── __main__.py      # Entry point for direct execution
+│   ├── cli.py           # Command-line interface
+│   ├── downloader.py    # Core downloading logic
+│   ├── helpers.py       # Helper functions
+│   └── utils.py         # Utility functions
+├── README.md
+├── PRD.md              # Product requirements document
+└── requirements.txt    # Project dependencies
 ```
 
 ## License
