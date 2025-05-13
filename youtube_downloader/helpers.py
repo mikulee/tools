@@ -22,9 +22,14 @@ def get_best_quality(url: str) -> str:
     formats = list_available_formats(url)
     max_height = 0
     for fmt in formats:
-        height = fmt.get('height', 0)
-        if height > max_height:
+        height = fmt.get('height')
+        # Check if height is not None before comparing
+        if height is not None and height > max_height:
             max_height = height
+    
+    # Default to 720p if no valid height found
+    if max_height == 0:
+        return 'best'
     return str(max_height) + 'p'
 
 def clean_downloads(directory: Optional[str] = None, pattern: str = "*.part") -> None:
