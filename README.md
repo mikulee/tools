@@ -11,7 +11,7 @@ A comprehensive collection of productivity and development tools.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/tools.git
+   git clone https://github.com/mikulee/tools.git
    ```
 
 2. Install required dependencies:
@@ -40,29 +40,29 @@ The `youtube_downloader` module provides a command-line utility for downloading 
 
 ```bash
 # Basic usage (recommended)
-python -m tools.youtube_downloader "https://youtube.com/watch?v=example"
+python -m youtube_downloader "https://youtube.com/watch?v=example"
 
 # Download with quality selection
-python -m tools.youtube_downloader "https://youtube.com/watch?v=example" --quality 1080p
+python -m youtube_downloader "https://youtube.com/watch?v=example" --quality 1080p
 
 # Download to specific directory
-python -m tools.youtube_downloader "https://youtube.com/watch?v=example" --output ./my_videos
+python -m youtube_downloader "https://youtube.com/watch?v=example" --output ./my_videos
 
 # Download audio only
-python -m tools.youtube_downloader "https://youtube.com/watch?v=example" --audio-only
+python -m youtube_downloader "https://youtube.com/watch?v=example" --audio-only
 ```
 
 ### Advanced Features
 
 ```bash
 # List available formats
-python -m tools.youtube_downloader "https://youtube.com/watch?v=example" --list-formats
+python -m youtube_downloader "https://youtube.com/watch?v=example" --list-formats
 
 # Clean partial downloads
-python -m tools.youtube_downloader --clean
+python -m youtube_downloader --clean
 
 # Download with automatic best quality selection
-python -m tools.youtube_downloader "https://youtube.com/watch?v=example" --quality best
+python -m youtube_downloader "https://youtube.com/watch?v=example" --quality best
 ```
 
 ### Packaging
